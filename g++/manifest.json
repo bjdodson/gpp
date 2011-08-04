@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["*://plus.google.com/*"],
-      "js": ["content.js"]
+      "js": ["jquery-1.6.2.js", "content.js"]
     }
   ]
 }
