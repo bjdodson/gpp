@@ -25,7 +25,8 @@ var postify = function(p) {
   content = "" + p.toString();
   if (content.indexOf("$html") !== false) {
     content = content
-      .replace("$html","<div style='border:1px solid #555;padding-top:-30px;margin-bottom:30px;position:relative;'><div style='position:relative;top:-32px;margin-left:20px;'>")
+      .replace("$html","<div style='border:1px solid #555;padding-top:-30px;margin-bottom:30px;position:relative;background-color:#ccc'><div style='position:relative;top:-32px;margin-left:20px;'>")
+      .replace("$end","</div></div>")
       .replace("&lt;em&gt;","<em>")
       .replace("&lt;/em&gt;","</em>")
 
