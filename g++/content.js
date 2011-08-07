@@ -5,8 +5,11 @@ var CAJA = false;
 // this is a hack to update the live g+ page.
 var poll_loop = function() {
     gpp.each("post", function(p) {
-      post = postify($(p).html());
-      $(p).html(post.render);
+      if (!$(p).hasClass("gpp-transformed")) {
+        $(p).addClass("gpp-transformed");
+        postify(p);
+        //$(p).css("background-color",'#'+Math.floor(Math.random()*4095).toString(16));
+      }
     });
     checkForLinks();
     //window.setTimeout(poll_loop, 5000);
@@ -21,19 +24,26 @@ on_load();
 
 var postify = function(p) {
   var r = { "post" : p };
-  var render = $(p).html()
-  content = "" + p.toString();
-  if (content.indexOf("$html") !== false) {
-    content = content
-      .replace("$html","<div style='border:1px solid #555;padding-top:-30px;margin-bottom:30px;position:relative;background-color:#ccc'><div style='position:relative;top:-32px;margin-left:20px;'>")
-      .replace("$end","</div></div>")
-      .replace("&lt;em&gt;","<em>")
-      .replace("&lt;/em&gt;","</em>")
 
+  // update content
+  var body = $(p).find(".Jq, .DE");
+  var render = $(body).html();
+  content = "" + render.toString();
+  while (true) {
+    i = content.indexOf("$html");
+    if (i == -1) break;
+    j = content.indexOf("$end");
+    if (j == -1) j = content.length - 1;
+    text = content.substr(i + "$html".length, j - i - "$html".length);
+    content = content.substr(0,i).concat("<div style='border:1px solid #555;margin-bottom:30px;position:relative;background-color:#ccc'><div style='position:relative;margin-left:20px;'>",
+      text
+        .replace(/&lt;/g,"<")
+        .replace(/&gt;/g,">")
+        .replace(/&amp;/g,"&")
+      , "</div></div>");
     render = content;
   }
-  r.render = render;
-  return r;
+  $(body).html(render);
 }
 
 function getCurrentCircle() {
